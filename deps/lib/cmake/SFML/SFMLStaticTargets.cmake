@@ -4,7 +4,7 @@ if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" LESS 2.5)
    message(FATAL_ERROR "CMake >= 2.6.0 required")
 endif()
 cmake_policy(PUSH)
-cmake_policy(VERSION 2.6...3.17)
+cmake_policy(VERSION 2.6)
 #----------------------------------------------------------------
 # Generated CMake target import file.
 #----------------------------------------------------------------
@@ -16,7 +16,7 @@ set(CMAKE_IMPORT_FILE_VERSION 1)
 set(_targetsDefined)
 set(_targetsNotDefined)
 set(_expectedTargets)
-foreach(_expectedTarget sfml-system sfml-main sfml-window OpenGL sfml-network sfml-graphics Freetype OpenAL VORBIS FLAC sfml-audio)
+foreach(_expectedTarget sfml-system sfml-main sfml-window OpenGL sfml-network sfml-graphics Freetype OpenAL Vorbis FLAC sfml-audio)
   list(APPEND _expectedTargets ${_expectedTarget})
   if(NOT TARGET ${_expectedTarget})
     list(APPEND _targetsNotDefined ${_expectedTarget})
@@ -94,7 +94,7 @@ add_library(sfml-graphics STATIC IMPORTED)
 set_target_properties(sfml-graphics PROPERTIES
   INTERFACE_COMPILE_DEFINITIONS "SFML_STATIC"
   INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
-  INTERFACE_LINK_LIBRARIES "sfml-window;\$<LINK_ONLY:legacy_stdio_definitions.lib>;\$<LINK_ONLY:Freetype>"
+  INTERFACE_LINK_LIBRARIES "sfml-window;\$<LINK_ONLY:OpenGL>;\$<LINK_ONLY:Freetype>"
 )
 
 # Create imported target Freetype
@@ -103,10 +103,10 @@ add_library(Freetype INTERFACE IMPORTED)
 # Create imported target OpenAL
 add_library(OpenAL INTERFACE IMPORTED)
 
-# Create imported target VORBIS
-add_library(VORBIS INTERFACE IMPORTED)
+# Create imported target Vorbis
+add_library(Vorbis INTERFACE IMPORTED)
 
-set_target_properties(VORBIS PROPERTIES
+set_target_properties(Vorbis PROPERTIES
   INTERFACE_COMPILE_DEFINITIONS "OV_EXCLUDE_STATIC_CALLBACKS"
 )
 
@@ -123,7 +123,7 @@ add_library(sfml-audio STATIC IMPORTED)
 set_target_properties(sfml-audio PROPERTIES
   INTERFACE_COMPILE_DEFINITIONS "SFML_STATIC"
   INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
-  INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:OpenAL>;sfml-system;\$<LINK_ONLY:VORBIS>;\$<LINK_ONLY:FLAC>"
+  INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:OpenAL>;sfml-system;\$<LINK_ONLY:Vorbis>;\$<LINK_ONLY:FLAC>"
 )
 
 if(CMAKE_VERSION VERSION_LESS 3.0.0)

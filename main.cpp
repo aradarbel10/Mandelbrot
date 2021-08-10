@@ -1,7 +1,10 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 
 #include "Mandelbrot.h"
+
+#include <format>
 
 int main() {
 	sf::Vector2i win_size{600, 600};

@@ -32,7 +32,9 @@ private:
 	// UI
 	sf::Vector2f mouse;
 
-	//sf::Font font;
-	//sf::Text coords_display;
+	// Text
+	std::unique_ptr<sf::Font> font;
+	sf::Text coords_display;
+	sf::RectangleShape text_back;
 
 };

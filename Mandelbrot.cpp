@@ -1,6 +1,7 @@
 #include "Mandelbrot.h"
 
 #include <iostream>
+#include <format>
 
 //std::unique_ptr<sf::Font> Mandelbrot::font;
 
@@ -15,12 +16,15 @@ Mandelbrot::Mandelbrot(sf::Vector2i size) {
 	brot_shdr.setUniform("palette_steps", palette_steps);
 
 	// handle font
-	//if (!font) {
-	//	font = std::make_unique<sf::Font>();
-	//	font->loadFromFile("cour.ttf");
-	//}
-	//coords_display.setFont(*font);
-	//coords_display.setString("test string");
+	if (!font) {
+		font = std::make_unique<sf::Font>();
+		font->loadFromFile("cour.ttf");
+	}
+	coords_display.setFont(*font);
+	coords_display.setCharacterSize(16);
+	coords_display.setFillColor(sf::Color::Black);
+
+	text_back.setFillColor(sf::Color(255, 255, 255, 190));
 }
 
 void Mandelbrot::eventUpdate(const sf::Event& event) {
@@ -89,5 +93,12 @@ void Mandelbrot::show(sf::RenderWindow& window) {
 	sf::Sprite spr(brot_texture.getTexture());
 	window.draw(spr, &brot_shdr);
 
-	//window.draw(coords_display);
+	coords_display.setString(std::format("pos: {}, {}\nscale: {}", center.x - panning_offset.x, center.y - panning_offset.y, scale));
+
+	auto b = coords_display.getGlobalBounds();
+	text_back.setPosition(b.left, b.top);
+	text_back.setSize({ b.width, b.height });
+	window.draw(text_back);
+	
+	window.draw(coords_display);
 }
