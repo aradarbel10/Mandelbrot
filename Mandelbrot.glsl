@@ -26,7 +26,7 @@ void main() {
 		* (vec2(gl_FragCoord.x, gl_FragCoord.y) - vec2(view_size.x / 2, view_size.y / 2))
 		) + center - vec2(0.75, 0);
 
-	//credit goes to https://en.wikipedia.org/wiki/Mandelbrot_set for pseudo-code
+	//
 	vec2 point = vec2(0, 0);
 
 	int i = 0;
