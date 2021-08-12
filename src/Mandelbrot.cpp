@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <format>
+#include <filesystem>
 
 //std::unique_ptr<sf::Font> Mandelbrot::font;
 
@@ -41,6 +42,9 @@ void Mandelbrot::eventUpdate(const sf::Event& event) {
 			break;
 		case sf::Keyboard::Down:
 			center.y -= scale * scroll_speed;
+			break;
+		case sf::Keyboard::S:
+			take_screenshot = true;
 			break;
 		}
 	}
@@ -86,6 +90,10 @@ void Mandelbrot::eventUpdate(const sf::Event& event) {
 	}
 }
 
+std::string calc_screenshot_name(int i) {
+	return std::format("screenshots/screenshot{}.png", i == 0 ? "" : ("(" + std::to_string(i) + ")"));
+}
+
 void Mandelbrot::show(sf::RenderWindow& window) {
 	brot_shdr.setUniform("center", center - panning_offset);
 	brot_shdr.setUniform("scale", scale);
@@ -101,4 +109,27 @@ void Mandelbrot::show(sf::RenderWindow& window) {
 	window.draw(text_back);
 	
 	window.draw(coords_display);
+
+	if (take_screenshot) {
+		if (!std::filesystem::exists("screenshots")) {
+			std::filesystem::create_directory("screenshots");
+		}
+
+		int screenshot_index = 0;
+		std::string result_name = "";
+		while (std::filesystem::exists(result_name = calc_screenshot_name(screenshot_index))) screenshot_index++;
+		//screenshot_index--;
+
+		sf::Texture t;
+		t.create(view_size.x, view_size.y);
+		t.update(window);
+
+		if (t.copyToImage().saveToFile(std::format(result_name))) {
+			std::cout << "Screenshot saved successfully! check screenshots folder.\n";
+		} else {
+			std::cout << "Failed to save screenshot...\n";
+		}
+
+		take_screenshot = false;
+	}
 }

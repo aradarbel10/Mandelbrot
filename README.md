@@ -9,3 +9,4 @@ I based the shader on pseudo-code presented on [the wikipedia page](https://en.w
 - Pan by left-clicking and dragging the mouse.
 - Zoom in/out by scrolling the mouse.
 - Change the color palette cycle by holding 'C' and scrolling the mouse.
+- Save screenshot by pressing 'S'.

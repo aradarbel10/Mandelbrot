@@ -29,6 +29,8 @@ private:
 	sf::Shader brot_shdr;
 	sf::Vector2u view_size;
 
+	bool take_screenshot = false;
+
 	// UI
 	sf::Vector2f mouse;
 
