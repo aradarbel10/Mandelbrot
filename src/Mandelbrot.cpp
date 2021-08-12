@@ -11,14 +11,14 @@ Mandelbrot::Mandelbrot(sf::Vector2i size) {
 
 	view_size = (sf::Vector2u)size;
 
-	brot_shdr.loadFromFile("Mandelbrot.glsl", sf::Shader::Fragment);
+	brot_shdr.loadFromFile("src/Mandelbrot.glsl", sf::Shader::Fragment);
 	brot_shdr.setUniform("view_size", (sf::Vector2f)size);
 	brot_shdr.setUniform("palette_steps", palette_steps);
 
 	// handle font
 	if (!font) {
 		font = std::make_unique<sf::Font>();
-		font->loadFromFile("cour.ttf");
+		font->loadFromFile("resources/cour.ttf");
 	}
 	coords_display.setFont(*font);
 	coords_display.setCharacterSize(16);

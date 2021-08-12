@@ -2,7 +2,7 @@
 Simple program to view and explore the Mandelbrot set, which is calculated in parallel on the gpu and rendered using [SFML](https://github.com/SFML/SFML).  
 I based the shader on pseudo-code presented on [the wikipedia page](https://en.wikipedia.org/wiki/Mandelbrot_set).  
 
-![Example Screenshot](screenshot.png?raw=true "Example Screenshot")
+![Example Screenshot](resources/screenshot.png?raw=true "Example Screenshot")
 
 ### Controls
 - Move around using the arrow keys.
