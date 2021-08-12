@@ -38,5 +38,7 @@ private:
 	std::unique_ptr<sf::Font> font;
 	sf::Text coords_display;
 	sf::RectangleShape text_back;
+	bool show_hud = true;
+	bool hud_size_changed = false;
 
 };

@@ -49,6 +49,16 @@ void Mandelbrot::eventUpdate(const sf::Event& event) {
 		}
 	}
 
+	if (event.type == sf::Event::KeyReleased) {
+		switch (event.key.code) {
+		case sf::Keyboard::H:
+			if (!hud_size_changed) {
+				show_hud ^= true;
+			}
+			hud_size_changed = false;
+		}
+	}
+
 	if (event.type == sf::Event::MouseWheelMoved) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
 			palette_steps += event.mouseWheel.delta;
@@ -57,6 +67,15 @@ void Mandelbrot::eventUpdate(const sf::Event& event) {
 
 			brot_shdr.setUniform("palette_steps", palette_steps);
 
+		} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::H)) {
+			hud_size_changed = true;
+			if (show_hud) {
+				int curr_size = coords_display.getCharacterSize();
+				std::cout << curr_size << " size\n";
+				curr_size += event.mouseWheel.delta;
+
+				coords_display.setCharacterSize(std::clamp(curr_size, 10, 35));
+			}
 		} else {
 			float fctr = event.mouseWheel.delta > 0 ? zoom_factor : 1.f / zoom_factor;
 
@@ -101,14 +120,16 @@ void Mandelbrot::show(sf::RenderWindow& window) {
 	sf::Sprite spr(brot_texture.getTexture());
 	window.draw(spr, &brot_shdr);
 
-	coords_display.setString(std::format("pos: {}, {}\nscale: {}", center.x - panning_offset.x, center.y - panning_offset.y, scale));
+	if (show_hud) {
+		coords_display.setString(std::format("pos: {}, {}\nscale: {}", center.x - panning_offset.x, center.y - panning_offset.y, scale));
 
-	auto b = coords_display.getGlobalBounds();
-	text_back.setPosition(b.left, b.top);
-	text_back.setSize({ b.width, b.height });
-	window.draw(text_back);
-	
-	window.draw(coords_display);
+		auto b = coords_display.getGlobalBounds();
+		text_back.setPosition(b.left, b.top);
+		text_back.setSize({ b.width, b.height });
+		window.draw(text_back);
+
+		window.draw(coords_display);
+	}
 
 	if (take_screenshot) {
 		if (!std::filesystem::exists("screenshots")) {

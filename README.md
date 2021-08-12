@@ -10,3 +10,5 @@ I based the shader on pseudo-code presented on [the wikipedia page](https://en.w
 - Zoom in/out by scrolling the mouse.
 - Change the color palette cycle by holding 'C' and scrolling the mouse.
 - Save screenshot by pressing 'S'.
+- Toggle coordinate HUD by pressing 'H'.
+- Change HUD size by holding 'H' and scrolling the mouse.
