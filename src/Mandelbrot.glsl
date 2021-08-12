@@ -18,15 +18,14 @@ uniform float scale;
 uniform int palette_steps;
 
 void main() {
-	int max_iteration = int(200 / scale);
+	int max_iteration = int(1000 / scale);
 	max_iteration = clamp(max_iteration, min_iteration_limit, max_iteration_limit);
 
-	vec2 pos = (mat2(scale / 2, 0, 0, scale / 2)
+	vec2 pos = (mat2(scale, 0, 0, scale)
 		* mat2(1 / view_size.x, 0, 0, 1 / view_size.y)
 		* (vec2(gl_FragCoord.x, gl_FragCoord.y) - vec2(view_size.x / 2, view_size.y / 2))
-		) + center - vec2(0.75, 0);
+		) + center;
 
-	//
 	vec2 point = vec2(0, 0);
 
 	int i = 0;

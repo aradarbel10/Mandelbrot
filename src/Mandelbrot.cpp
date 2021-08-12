@@ -57,7 +57,7 @@ void Mandelbrot::eventUpdate(const sf::Event& event) {
 			float fctr = event.mouseWheel.delta > 0 ? zoom_factor : 1.f / zoom_factor;
 
 			scale *= fctr;
-			center += sf::Vector2f(mouse.x / view_size.x - 0.5f, 0.5f - mouse.y / view_size.y) * (1.f / fctr - 1.f) * scale / 2.f;
+			center += sf::Vector2f(mouse.x / view_size.x - 0.5f, 0.5f - mouse.y / view_size.y) * (1.f / fctr - 1.f) * scale;
 		}
 	}
 
@@ -72,8 +72,8 @@ void Mandelbrot::eventUpdate(const sf::Event& event) {
 
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			panning_offset = sf::Vector2f(
-				(mouse.x - panning_anchor.x) / view_size.x * scale / 2.f,
-				(panning_anchor.y - mouse.y) / view_size.y * scale / 2.f
+				(mouse.x - panning_anchor.x) / view_size.x * scale,
+				(panning_anchor.y - mouse.y) / view_size.y * scale
 			);
 		}
 	}

@@ -20,8 +20,8 @@ private:
 
 	// Transformation
 	sf::Vector2f panning_anchor{ -1, -1 }, panning_offset{ 0, 0 };
-	float scale = 5, zoom_factor = 0.9f, scroll_speed = 0.02f;
-	sf::Vector2f center{ 0, 0 };
+	float scale = 2, zoom_factor = 0.9f, scroll_speed = 0.02f;
+	sf::Vector2f center{ -0.5, 0 };
 
 	// Rendering
 	int palette_steps = 50;
