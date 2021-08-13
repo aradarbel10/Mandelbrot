@@ -15,7 +15,7 @@ uniform vec2 view_size;
 uniform vec2 center;
 uniform float scale;
 
-uniform int palette_steps;
+uniform int palette_steps = 50;
 
 void main() {
 	int max_iteration = int(1000 / scale);

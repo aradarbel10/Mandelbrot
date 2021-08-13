@@ -4,14 +4,14 @@
 
 #include "Mandelbrot.h"
 
-#include <format>
-
 int main() {
+	//create the window
 	sf::Vector2i win_size{600, 600};
 
 	sf::RenderWindow window(sf::VideoMode(win_size.x, win_size.y), "The Mandelbrot Set", sf::Style::Close);
 	sf::Event event;
 
+	//create mandelbrot object to cover the window's size
 	Mandelbrot myMandelbrot(win_size);
 
 	while (window.isOpen()) {

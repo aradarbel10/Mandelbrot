@@ -3,11 +3,14 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Font.hpp>
 
+//std::unique_ptr<sf::Font> Mandelbrot::font;
+
 class Mandelbrot {
 public:
 
 	Mandelbrot(sf::Vector2i size);
 
+	//remove all move & copy semantics, because I don't think it makes sense to move and copy this object.
 	Mandelbrot(const Mandelbrot&) = delete;
 	Mandelbrot(const Mandelbrot&&) = delete;
 	Mandelbrot& operator =(const Mandelbrot&) = delete;
@@ -18,9 +21,11 @@ public:
 
 private:
 
-	// Transformation
-	sf::Vector2f panning_anchor{ -1, -1 }, panning_offset{ 0, 0 };
-	float scale = 2, zoom_factor = 0.9f, scroll_speed = 0.02f;
+	// Transformations
+	sf::Vector2f panning_anchor{ -1, -1 }, panning_offset{ 0, 0 }; // used for mouse panning
+	const float zoom_factor = 0.9f, scroll_speed = 0.02f; // movement consts
+
+	float scale = 2; // current transform -- scale and position
 	sf::Vector2f center{ -0.5, 0 };
 
 	// Rendering
@@ -29,16 +34,20 @@ private:
 	sf::Shader brot_shdr;
 	sf::Vector2u view_size;
 
+	// User Input
+	sf::Vector2f mouse;
 	bool take_screenshot = false;
 
-	// UI
-	sf::Vector2f mouse;
-
-	// Text
-	std::unique_ptr<sf::Font> font;
+	// HUD
+	sf::Font font;
 	sf::Text coords_display;
 	sf::RectangleShape text_back;
 	bool show_hud = true;
 	bool hud_size_changed = false;
+
+	const int def_hud_size = 16, min_hud_size = 10, max_hud_size = 35;
+
+	// Screenshots
+	const std::string screenshot_dir = "screenshots";
 
 };

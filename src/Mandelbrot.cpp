@@ -7,22 +7,23 @@
 //std::unique_ptr<sf::Font> Mandelbrot::font;
 
 Mandelbrot::Mandelbrot(sf::Vector2i size) {
+	// check for fatal errors
 	if (!sf::Shader::isAvailable()) std::cerr << "ERROR: system does not support shaders!\n";
 	if (!brot_texture.create(size.x, size.y)) std::cerr << "ERROR: failed to create render texture!\n";
 
 	view_size = (sf::Vector2u)size;
 
+	// set up shader
 	brot_shdr.loadFromFile("src/Mandelbrot.glsl", sf::Shader::Fragment);
 	brot_shdr.setUniform("view_size", (sf::Vector2f)size);
-	brot_shdr.setUniform("palette_steps", palette_steps);
 
-	// handle font
-	if (!font) {
-		font = std::make_unique<sf::Font>();
-		font->loadFromFile("resources/cour.ttf");
+	// handle font & text
+	if (!font.loadFromFile("resources/cour.ttf")) {
+		std::cerr << "ERROR: failed to load font!\n";
 	}
-	coords_display.setFont(*font);
-	coords_display.setCharacterSize(16);
+
+	coords_display.setFont(font);
+	coords_display.setCharacterSize(def_hud_size);
 	coords_display.setFillColor(sf::Color::Black);
 
 	text_back.setFillColor(sf::Color(255, 255, 255, 190));
@@ -31,6 +32,7 @@ Mandelbrot::Mandelbrot(sf::Vector2i size) {
 void Mandelbrot::eventUpdate(const sf::Event& event) {
 	if (event.type == sf::Event::KeyPressed) {
 		switch (event.key.code) {
+		// keyboard movement
 		case sf::Keyboard::Right:
 			center.x += scale * scroll_speed;
 			break;
@@ -43,6 +45,8 @@ void Mandelbrot::eventUpdate(const sf::Event& event) {
 		case sf::Keyboard::Down:
 			center.y -= scale * scroll_speed;
 			break;
+
+		// take screenshot next time rendering
 		case sf::Keyboard::S:
 			take_screenshot = true;
 			break;
@@ -60,26 +64,26 @@ void Mandelbrot::eventUpdate(const sf::Event& event) {
 	}
 
 	if (event.type == sf::Event::MouseWheelMoved) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) { // scrolling with C alters color palette
 			palette_steps += event.mouseWheel.delta;
 
-			if (palette_steps < 0) palette_steps = 0;
+			if (palette_steps < 1) palette_steps = 1;
 
 			brot_shdr.setUniform("palette_steps", palette_steps);
 
-		} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::H)) {
+		} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::H)) { // scrolling with H resizes HUD
 			hud_size_changed = true;
-			if (show_hud) {
+			if (show_hud) { // resize HUD ont if it's active
 				int curr_size = coords_display.getCharacterSize();
-				std::cout << curr_size << " size\n";
 				curr_size += event.mouseWheel.delta;
 
-				coords_display.setCharacterSize(std::clamp(curr_size, 10, 35));
+				coords_display.setCharacterSize(std::clamp(curr_size, min_hud_size, max_hud_size));
 			}
 		} else {
 			float fctr = event.mouseWheel.delta > 0 ? zoom_factor : 1.f / zoom_factor;
 
 			scale *= fctr;
+			// moving is necessary to zoom around the mouse position
 			center += sf::Vector2f(mouse.x / view_size.x - 0.5f, 0.5f - mouse.y / view_size.y) * (1.f / fctr - 1.f) * scale;
 		}
 	}
@@ -109,8 +113,9 @@ void Mandelbrot::eventUpdate(const sf::Event& event) {
 	}
 }
 
+// helper functions for saving screenshots
 std::string calc_screenshot_name(int i) {
-	return std::format("screenshots/screenshot{}.png", i == 0 ? "" : ("(" + std::to_string(i) + ")"));
+	return screenshot_dir + std::format("/screenshot{}.png", i == 0 ? "" : ("(" + std::to_string(i) + ")"));
 }
 
 void Mandelbrot::show(sf::RenderWindow& window) {
@@ -132,14 +137,13 @@ void Mandelbrot::show(sf::RenderWindow& window) {
 	}
 
 	if (take_screenshot) {
-		if (!std::filesystem::exists("screenshots")) {
-			std::filesystem::create_directory("screenshots");
+		if (!std::filesystem::exists(screenshot_dir)) { // create screenshots folder if it doesn't already exist
+			std::filesystem::create_directory(screenshot_dir);
 		}
 
 		int screenshot_index = 0;
-		std::string result_name = "";
-		while (std::filesystem::exists(result_name = calc_screenshot_name(screenshot_index))) screenshot_index++;
-		//screenshot_index--;
+		std::string result_name;
+		while (std::filesystem::exists(result_name = calc_screenshot_name(screenshot_index))) screenshot_index++; // rename new screenshot so existing ones don't get overwritten
 
 		sf::Texture t;
 		t.create(view_size.x, view_size.y);
