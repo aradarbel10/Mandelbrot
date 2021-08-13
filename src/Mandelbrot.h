@@ -19,6 +19,8 @@ public:
 	void eventUpdate(const sf::Event& event);
 	void show(sf::RenderWindow& window);
 
+	std::string calc_screenshot_name(int i);
+
 private:
 
 	// Transformations

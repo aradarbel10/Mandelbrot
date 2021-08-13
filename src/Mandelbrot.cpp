@@ -14,7 +14,7 @@ Mandelbrot::Mandelbrot(sf::Vector2i size) {
 	view_size = (sf::Vector2u)size;
 
 	// set up shader
-	brot_shdr.loadFromFile("src/Mandelbrot.glsl", sf::Shader::Fragment);
+	brot_shdr.loadFromFile("resources/Mandelbrot.glsl", sf::Shader::Fragment);
 	brot_shdr.setUniform("view_size", (sf::Vector2f)size);
 
 	// handle font & text
@@ -114,7 +114,7 @@ void Mandelbrot::eventUpdate(const sf::Event& event) {
 }
 
 // helper functions for saving screenshots
-std::string calc_screenshot_name(int i) {
+std::string Mandelbrot::calc_screenshot_name(int i) {
 	return screenshot_dir + std::format("/screenshot{}.png", i == 0 ? "" : ("(" + std::to_string(i) + ")"));
 }
 
