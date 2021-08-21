@@ -68,7 +68,7 @@ void Mandelbrot::eventUpdate(const sf::Event& event) {
 
 			scale *= fctr;
 			// moving is necessary to zoom around the mouse position
-			center += sf::Vector2f(mouse.x / view_size.x - 0.5f, 0.5f - mouse.y / view_size.y) * (1.f / fctr - 1.f) * scale;
+			center += sf::Vector2f{ mouse.x / view_size.x - 0.5f, 0.5f - mouse.y / view_size.y } * (1.f / fctr - 1.f) * scale;
 		}
 	}
 
@@ -82,10 +82,10 @@ void Mandelbrot::eventUpdate(const sf::Event& event) {
 		mouse = sf::Vector2f(event.mouseMove.x, event.mouseMove.y);
 
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-			panning_offset = sf::Vector2f(
+			panning_offset = {
 				(mouse.x - panning_anchor.x) / view_size.x * scale,
 				(panning_anchor.y - mouse.y) / view_size.y * scale
-			);
+			};
 		}
 	}
 
@@ -97,15 +97,16 @@ void Mandelbrot::eventUpdate(const sf::Event& event) {
 	}
 }
 
-std::string Mandelbrot::calc_screenshot_name(int i) {
-	return screenshot_dir + std::format("/screenshot{}.png", i == 0 ? "" : ("(" + std::to_string(i) + ")"));
+std::filesystem::path Mandelbrot::calc_screenshot_name(int i) {
+	auto suffix = i == 0 ? "" : std::format(" ({})", i);
+	return screenshot_dir / std::format("screenshot{}.png", suffix);
 }
 
 void Mandelbrot::show(sf::RenderWindow& window) {
 	brot_shdr.setUniform("center", center - panning_offset);
 	brot_shdr.setUniform("scale", scale);
 
-	sf::Sprite spr(brot_texture.getTexture());
+	sf::Sprite spr{ brot_texture.getTexture() };
 	window.draw(spr, &brot_shdr);
 
 	if (hud.isVisible()) {
@@ -119,14 +120,18 @@ void Mandelbrot::show(sf::RenderWindow& window) {
 		}
 
 		int screenshot_index = 0;
-		std::string result_name;
-		while (std::filesystem::exists(result_name = calc_screenshot_name(screenshot_index))) screenshot_index++;
+		std::filesystem::path result_name;
+
+		do {
+			result_name = calc_screenshot_name(screenshot_index);
+			screenshot_index++;
+		} while (std::filesystem::exists(result_name));
 
 		sf::Texture t;
 		t.create(view_size.x, view_size.y);
 		t.update(window);
 
-		if (t.copyToImage().saveToFile(std::format(result_name))) {
+		if (t.copyToImage().saveToFile( result_name.string() )) {
 			std::cout << "Screenshot saved successfully! check screenshots folder.\n";
 		} else {
 			std::cout << "Failed to save screenshot...\n";

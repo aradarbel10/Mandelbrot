@@ -5,15 +5,14 @@
 #include "Mandelbrot.h"
 
 int main() {
-	sf::Vector2i win_size{600, 600};
+	sf::Vector2i win_size{ 600, 600 };
 
-	sf::RenderWindow window(sf::VideoMode(win_size.x, win_size.y), "The Mandelbrot Set", sf::Style::Close);
-	sf::Event event;
+	sf::RenderWindow window{ sf::VideoMode(win_size.x, win_size.y), "The Mandelbrot Set", sf::Style::Close };
 
-	Mandelbrot myMandelbrot(win_size);
+	Mandelbrot myMandelbrot{ win_size };
 
 	while (window.isOpen()) {
-		while (window.pollEvent(event)) {
+		for (auto event = sf::Event{}; window.pollEvent(event);) {
 			if (event.type == sf::Event::Closed) {
 				window.close();
 			}
