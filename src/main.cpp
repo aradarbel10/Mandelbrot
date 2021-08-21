@@ -5,21 +5,23 @@
 #include "Mandelbrot.h"
 
 int main() {
-	//create the window
 	sf::Vector2i win_size{600, 600};
 
 	sf::RenderWindow window(sf::VideoMode(win_size.x, win_size.y), "The Mandelbrot Set", sf::Style::Close);
 	sf::Event event;
 
-	//create mandelbrot object to cover the window's size
 	Mandelbrot myMandelbrot(win_size);
 
 	while (window.isOpen()) {
 		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::Closed) window.close();
+			if (event.type == sf::Event::Closed) {
+				window.close();
+			}
 
 			if (event.type == sf::Event::KeyPressed) {
-				if (event.key.code == sf::Keyboard::Escape) window.close();
+				if (event.key.code == sf::Keyboard::Escape) {
+					window.close();
+				}
 			}
 
 			myMandelbrot.eventUpdate(event);

@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Font.hpp>
 
-//std::unique_ptr<sf::Font> Mandelbrot::font;
+#include "HUD.h"
 
 class Mandelbrot {
 public:
@@ -24,8 +24,8 @@ public:
 private:
 
 	// Transformations
-	sf::Vector2f panning_anchor{ -1, -1 }, panning_offset{ 0, 0 }; // used for mouse panning
-	const float zoom_factor = 0.9f, scroll_speed = 0.02f; // movement consts
+	sf::Vector2f panning_anchor{ -1, -1 }, panning_offset{ 0, 0 };
+	const float zoom_factor = 0.9f, scroll_speed = 0.02f;
 
 	float scale = 2; // current transform -- scale and position
 	sf::Vector2f center{ -0.5, 0 };
@@ -39,15 +39,9 @@ private:
 	// User Input
 	sf::Vector2f mouse;
 	bool take_screenshot = false;
-
-	// HUD
-	sf::Font font;
-	sf::Text coords_display;
-	sf::RectangleShape text_back;
-	bool show_hud = true;
 	bool hud_size_changed = false;
 
-	const int def_hud_size = 16, min_hud_size = 10, max_hud_size = 35;
+	HUD hud;
 
 	// Screenshots
 	const std::string screenshot_dir = "screenshots";
